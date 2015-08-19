@@ -97,10 +97,19 @@ clonalityTest <- function(obj = NULL, corData = NULL, llrData = NULL,
     res <- unlist(sapply(pairs, function(x) {
         corData$dm[ allPairs %in% x  ] 
     }), use.names=FALSE)
-    
-    clonTab <- data.frame(patient = pat, 
-        combination = unlist(pairs, use.names=FALSE), cor = res, 
-        llr2 = log(llrData$LR$LR2), llr2.p = llrData$LR$LR2pvalue, 
+
+    sampleNames(obj) -> snames
+
+    lapply(unlist(pairs), function(x) {
+        idx <- as.integer(unlist(strsplit(x, ":")))
+        paste(snames[idx[1]], snames[idx[2]], sep=":")
+    }) -> combination.named
+
+
+    clonTab <- data.frame(patient = pat,
+        combination = unlist(pairs, use.names=FALSE),
+        combination.named = unlist(combination.named, use.names=FALSE),
+        cor = res, llr2 = log(llrData$LR$LR2), llr2.p = llrData$LR$LR2pvalue,
         stringsAsFactors=FALSE)
     
     # refTab
