@@ -66,6 +66,14 @@ clonalityTest <- function(obj = NULL, corData = NULL, llrData = NULL,
     
     # Do likelihoodRatio
     if (is.null(llrData)) {
+        if (is.null(sbjctLst)) {
+            message("No subject list provided")
+            return()
+        }
+        if (sum(duplicated(sbjctLst)) == 0) {
+            message("No pairs found in subject list")
+            return()
+        }
         llrData <- likelihoodRatio(obj, patients=sbjctLst, refdata=refdata)
     }
     
