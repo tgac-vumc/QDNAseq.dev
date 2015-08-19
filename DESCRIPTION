@@ -9,3 +9,4 @@ Description: This package contains experimental new features which at
     some point in time might be incorporated into QDNAseq.
 License: What license is it under?
 LazyData: TRUE
+Depends: QDNAseq, Clonality >= 1.16.0
