@@ -207,8 +207,8 @@ correlation <- function(obj, labels=NULL, groups=NULL,...) {
 }
 
 # Plot correlation cluster
-plotCorCluster <- function(corData, scale=TRUE, main="Cluster plot", 
-    labwidth=.3, ...) {
+plotCorCluster <- function(corData, scale=TRUE, main="Cluster plot",
+    labwidth=.3, treecut=NULL, ...) {
     sn <- corData$sn
     hc <- corData$hc
     
@@ -238,7 +238,9 @@ plotCorCluster <- function(corData, scale=TRUE, main="Cluster plot",
     axis(1, at=(cumsum(cc$lengths) - cc$lengths / 2) / nrow(sn), labels=1:22)
     par(mar=c(5, 2, 4, -0.1)  + .1)
     plot(as.dendrogram(hc), horiz=TRUE, yaxs="i", axes=FALSE, leaflab="n")
-    
+    if (!is.null(treecut))
+        abline(v=treecut, lty=2)
+
     par(mar=c(5,-0.1,4,-0.1) + .1)
     labels <- hc$labels
     plot(NA, xlim=c(0,1), ylim=c(0, 1), type="n", yaxs="i", axes=FALSE, 
