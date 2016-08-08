@@ -105,7 +105,9 @@ clonalityTest <- function(obj = NULL, corData = NULL, llrData = NULL,
         paste(snames[idx[1]], snames[idx[2]], sep=":")
     }) -> combination.named
 
-
+    if (is.null(llrData$LR$LR2pvalue))
+        llrData$LR$LR2pvalue <- NA
+   
     clonTab <- data.frame(patient = pat,
         combination = unlist(pairs, use.names=FALSE),
         combination.named = unlist(combination.named, use.names=FALSE),
@@ -114,23 +116,27 @@ clonalityTest <- function(obj = NULL, corData = NULL, llrData = NULL,
 
     # refTab
     # Correlation
-    refCor <- corData$dm[ !allPairs %in% unlist(pairs) ]
-    refCorName <- allPairs[ !allPairs %in% unlist(pairs) ]
+    if (sum(!allPairs %in% unlist(pairs)) > 0) {
+        refCor <- corData$dm[ !allPairs %in% unlist(pairs) ]
+        refCorName <- allPairs[ !allPairs %in% unlist(pairs) ]
 
-    # LR2
-    # Reorder LLR2 data
-    refLlr2Name <- paste(llrData$refLR$Sample1, llrData$refLR$Sample2, sep=":")
-    refLlr2Name2 <- unlist(sapply(strsplit(refLlr2Name, "\\.|:"), function(x) {
-        paste(sprintf("%03d", sort(as.numeric(x[c(2,4)]))), collapse=":")
-    }))
+        # LR2
+        # Reorder LLR2 data
+        refLlr2Name <- paste(llrData$refLR$Sample1, llrData$refLR$Sample2, sep=":")
+        refLlr2Name2 <- unlist(sapply(strsplit(refLlr2Name, "\\.|:"), function(x) {
+            paste(sprintf("%03d", sort(as.numeric(x[c(2,4)]))), collapse=":")
+        }))
 
-    refLR2ord <- order(unlist(refLlr2Name2))
-    refLlr2 <- log(llrData$refLR$LR2)
+        refLR2ord <- order(unlist(refLlr2Name2))
+        refLlr2 <- log(llrData$refLR$LR2)
 
-    refTab <- data.frame(name = refCorName, check = refLlr2Name[refLR2ord],
-        cor = refCor, llr2 = refLlr2[refLR2ord],
-        stringsAsFactors=FALSE)
-
+        refTab <- data.frame(name = refCorName, check = refLlr2Name[refLR2ord],
+            cor = refCor, llr2 = refLlr2[refLR2ord],
+            stringsAsFactors=FALSE)
+    }
+    else {
+        refTab <- NULL
+    }
     # Make sure data types are correct:
 
     # Return data
