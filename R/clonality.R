@@ -271,7 +271,8 @@ clonalityReport <- function(clone.test = NULL, clonTab = NULL,
     if (!is.null(clonTab)) {
         LLR2 <- clonTab$llr2
         correlations <- clonTab$cor
-        labels <- clonTab$patient
+        if (is.null(labels))
+            labels <- clonTab$patient
     }
 
     if (!is.null(refTab)) {
