@@ -85,7 +85,7 @@ clonalityTest <- function(obj = NULL, corData = NULL, llrData = NULL,
         paste(sprintf("%03d",x), collapse=":")
     })
 
-    sapply(unique(patients), function(x) {
+    lapply(unique(patients), function(x) {
         cb <- combn(which(patients == x), 2)
         cbStr <- apply(cb, 2, function(x) {
             paste(sprintf("%03d", x), collapse=":")
