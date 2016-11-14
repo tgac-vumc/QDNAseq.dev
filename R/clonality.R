@@ -85,7 +85,10 @@ clonalityTest <- function(obj = NULL, corData = NULL, llrData = NULL,
         paste(sprintf("%03d",x), collapse=":")
     })
 
-    lapply(unique(patients), function(x) {
+    patientRle <- rle(sort(as.vector(patients)))
+    paired <- patientRle$values[patientRle$lengths > 1]
+
+    lapply(paired, function(x) {
         cb <- combn(which(patients == x), 2)
         cbStr <- apply(cb, 2, function(x) {
             paste(sprintf("%03d", x), collapse=":")
@@ -93,7 +96,7 @@ clonalityTest <- function(obj = NULL, corData = NULL, llrData = NULL,
     }) -> pairs
 
     # clonTab
-    pat <- rep(unique(patients), sapply(pairs, length))
+    pat <- rep(paired, sapply(pairs, length))
     res <- unlist(sapply(pairs, function(x) {
         corData$dm[ allPairs %in% x  ]
     }), use.names=FALSE)
